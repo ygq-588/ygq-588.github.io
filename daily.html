@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的日常 - 王子殿下的个人网站</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .gear-btn { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(135deg, #8B4513, #D4AF37); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 9999; }
+        .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; max-height: 500px; overflow-y: auto; }
+        .settings-menu button { width: 100%; padding: 12px 15px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; }
+        .settings-menu button:hover { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="about.html"><i class="fas fa-user"></i> 关于我</a></li>
+                <li><a href="daily.html" class="active"><i class="fas fa-calendar-day"></i> 我的日常</a></li>
+                <li><a href="gallery.html"><i class="fas fa-images"></i> 我的相册</a></li>
+                <li><a href="work.html"><i class="fas fa-briefcase"></i> 我的工作</a></li>
+                <li><a href="work-diary.html"><i class="fas fa-book"></i> 工作日记</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="gear-btn" id="gearBtn">⚙️</button>
+    <div class="settings-menu" id="settingsMenu">
+        <div style="padding:10px 15px; background:#8B4513; color:white;">🛠️ 开发者模式</div>
+        <div style="padding:8px 0;">
+            <button id="menuTextEdit"><span style="color:#4CAF50;">📝</span> 文本修改</button>
+            <button id="menuBgSettings"><span style="color:#2196F3;">🎨</span> 背景设置</button>
+            <button id="menuAvatarSettings"><span style="color:#FF9800;">👤</span> 头像设置</button>
+            <button id="menuPhotoManage"><span style="color:#9C27B0;">🖼️</span> 照片管理</button>
+            <button id="menuSiteInfo"><span style="color:#FF9800;">🏠</span> 站点信息</button>
+            <button id="menuChangePassword"><span style="color:#FF9800;">🔐</span> 修改密码</button>
+        </div>
+        <div style="border-top:1px solid #eee; padding:8px 0;">
+            <button id="menuFullEdit"><span style="color:#4CAF50;">🚀</span> 进入完整编辑模式</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="page-header">
+            <div class="container">
+                <h1>我的日常</h1>
+                <p>记录日常生活、习惯和有趣的活动安排</p>
+            </div>
+        </header>
+
+        <main class="container page-content">
+            <section class="content-section">
+                <h2><i class="fas fa-sun"></i> 每日作息</h2>
+                <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-bed"></i></div><h3>早晨 (6:00-8:00)</h3><ul><li>6:00 - 起床，喝一杯温水</li><li>6:15 - 晨间冥想和呼吸练习</li><li>6:45 - 轻度运动或瑜伽</li><li>7:15 - 阅读新闻和计划当日事项</li><li>7:45 - 营养早餐</li></ul></div>
+                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-briefcase"></i></div><h3>日间 (8:00-18:00)</h3><ul><li>8:00 - 开始工作/学习</li><li>10:30 - 短暂休息，补充水分</li><li>12:30 - 午餐时间</li><li>13:00 - 午休或散步</li><li>15:30 - 下午茶时间</li><li>17:30 - 总结当日工作</li></ul></div>
+                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-moon"></i></div><h3>晚间 (18:00-22:00)</h3><ul><li>18:30 - 晚餐时间</li><li>19:30 - 个人爱好时间</li><li>20:30 - 阅读或学习新技能</li><li>21:30 - 放松和反思当日</li><li>22:00 - 准备休息</li></ul></div>
+                </div>
+            </section>
+
+            <section class="quote-section">
+                <blockquote><i class="fas fa-quote-left"></i><p>优秀不是一种行为，而是一种习惯。我们日复一日做的事情，最终决定了我们成为什么样的人。</p><cite>— 王子殿下的日常哲学</cite></blockquote>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <p class="footer-text">个人网站 © 2026 - 展示我的世界</p>
+            <div class="footer-social"><a href="#" class="social-link"><i class="fab fa-weixin"></i></a><a href="#" class="social-link"><i class="fab fa-weibo"></i></a><a href="#" class="social-link"><i class="fab fa-github"></i></a><a href="#" class="social-link"><i class="fab fa-linkedin"></i></a></div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/universal-settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作日记 - 王子殿下的个人网站</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .gear-btn { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(135deg, #8B4513, #D4AF37); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 9999; }
+        .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; max-height: 500px; overflow-y: auto; }
+        .settings-menu button { width: 100%; padding: 12px 15px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; }
+        .settings-menu button:hover { background: #f0f0f0; }
+        .page-header { text-align: center; padding: 2rem 0; background: linear-gradient(135deg, #f5f0e8, #e8e0d5); border-radius: 24px; margin-bottom: 2rem; }
+        .section-card { background: white; border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #D4AF37; }
+        .add-btn { background: #4CAF50; color: white; border: none; border-radius: 20px; padding: 5px 15px; cursor: pointer; }
+        .timeline-item, .diary-item { padding: 1rem; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
+        .timeline-item:hover, .diary-item:hover { background: #f9f9f9; }
+        .timeline-date { font-weight: bold; color: #8B4513; margin-bottom: 0.25rem; }
+        .timeline-content { color: #555; }
+        .diary-date { font-weight: bold; color: #8B4513; }
+        .diary-title { font-size: 1.1rem; font-weight: bold; margin: 0.25rem 0; }
+        .diary-preview { color: #888; font-size: 0.85rem; }
+        .empty-msg { text-align: center; padding: 2rem; color: #999; }
+        .delete-item { float: right; color: #f44336; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+        .timeline-item:hover .delete-item, .diary-item:hover .delete-item { opacity: 1; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: white; border-radius: 12px; padding: 20px; min-width: 400px; max-width: 500px; }
+        .modal-content input, .modal-content textarea { width: 100%; padding: 8px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
+        .modal-buttons button { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; }
+        .btn-save { background: #4CAF50; color: white; }
+        .btn-cancel { background: #ccc; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="about.html"><i class="fas fa-user"></i> 关于我</a></li>
+                <li><a href="daily.html"><i class="fas fa-calendar-day"></i> 我的日常</a></li>
+                <li><a href="gallery.html"><i class="fas fa-images"></i> 我的相册</a></li>
+                <li><a href="work.html"><i class="fas fa-briefcase"></i> 我的工作</a></li>
+                <li><a href="work-diary.html" class="active"><i class="fas fa-book"></i> 工作日记</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="gear-btn" id="gearBtn">⚙️</button>
+    <div class="settings-menu" id="settingsMenu">
+        <div style="padding:10px 15px; background:#8B4513; color:white;">🛠️ 开发者模式</div>
+        <div style="padding:8px 0;">
+            <button id="menuTextEdit"><span style="color:#4CAF50;">📝</span> 文本修改</button>
+            <button id="menuBgSettings"><span style="color:#2196F3;">🎨</span> 背景设置</button>
+            <button id="menuAvatarSettings"><span style="color:#FF9800;">👤</span> 头像设置</button>
+            <button id="menuPhotoManage"><span style="color:#9C27B0;">🖼️</span> 照片管理</button>
+            <button id="menuSiteInfo"><span style="color:#FF9800;">🏠</span> 站点信息</button>
+            <button id="menuChangePassword"><span style="color:#FF9800;">🔐</span> 修改密码</button>
+        </div>
+        <div style="border-top:1px solid #eee; padding:8px 0;">
+            <button id="menuFullEdit"><span style="color:#4CAF50;">🚀</span> 进入完整编辑模式</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-book"></i> 工作日记</h1>
+            <p>记录工作心得、项目进展和职业思考</p>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <h2><i class="fas fa-history"></i> 大事记</h2>
+                <button class="add-btn" id="addTimelineBtn">+ 新增大事记</button>
+            </div>
+            <div id="timelineList"></div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <h2><i class="fas fa-pen-fancy"></i> 日记</h2>
+                <button class="add-btn" id="addDiaryBtn">+ 新增日记</button>
+            </div>
+            <div id="diaryList"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <p class="footer-text">个人网站 © 2026 - 展示我的世界</p>
+            <div class="footer-social"><a href="#" class="social-link"><i class="fab fa-weixin"></i></a><a href="#" class="social-link"><i class="fab fa-weibo"></i></a><a href="#" class="social-link"><i class="fab fa-github"></i></a><a href="#" class="social-link"><i class="fab fa-linkedin"></i></a></div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/universal-settings.js"></script>
+
+    <script>
+        (function() {
+            const PASSWORD_KEY = 'site_password';
+            const DEFAULT_PASSWORD = '12345';
+            if (!localStorage.getItem(PASSWORD_KEY)) localStorage.setItem(PASSWORD_KEY, DEFAULT_PASSWORD);
+            const gearBtn = document.getElementById('gearBtn');
+            const menu = document.getElementById('settingsMenu');
+            if (gearBtn && menu) {
+                gearBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const lastAuth = localStorage.getItem('last_auth_time');
+                    if (lastAuth && (Date.now() - parseInt(lastAuth)) < 10 * 60 * 1000) { menu.style.display = 'block'; return; }
+                    const inputPwd = prompt('🔐 请输入密码：');
+                    if (inputPwd === localStorage.getItem(PASSWORD_KEY)) { localStorage.setItem('last_auth_time', Date.now()); menu.style.display = 'block'; }
+                    else alert('密码错误！');
+                };
+            }
+            const changePwdBtn = document.getElementById('menuChangePassword');
+            if (changePwdBtn) {
+                changePwdBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const oldPwd = prompt('请输入当前密码：');
+                    if (oldPwd !== localStorage.getItem(PASSWORD_KEY)) { alert('当前密码错误！'); return; }
+                    const newPwd = prompt('请输入新密码：');
+                    if (newPwd && newPwd.length > 0) { localStorage.setItem(PASSWORD_KEY, newPwd); alert('✅ 密码修改成功！'); }
+                    else alert('密码不能为空');
+                    menu.style.display = 'none';
+                };
+            }
+        })();
+    </script>
+
+    <script>
+        const TIMELINE_KEY = 'prince_timeline';
+        const DIARY_KEY = 'prince_diaries';
+        
+        let timelines = [];
+        let diaries = [];
+        
+        function loadData() {
+            const savedTimeline = localStorage.getItem(TIMELINE_KEY);
+            if (savedTimeline) timelines = JSON.parse(savedTimeline);
+            else timelines = [
+                { id: Date.now(), date: '2026年4月15日', content: '完成了个人网站相册功能' },
+                { id: Date.now()+1, date: '2026年4月16日', content: '新增站点信息设置功能' }
+            ];
+            
+            const savedDiary = localStorage.getItem(DIARY_KEY);
+            if (savedDiary) diaries = JSON.parse(savedDiary);
+            else diaries = [
+                { id: Date.now()+2, date: '2026年4月15日', title: '相册功能完成', content: '今天完成了相册的上传、删除、分类功能，感觉很有成就感。' },
+                { id: Date.now()+3, date: '2026年4月16日', title: '站点信息设置', content: '新增了站点信息设置功能，可以修改网站标题、副标题、SEO等。' }
+            ];
+            
+            renderTimeline();
+            renderDiary();
+        }
+        
+        function saveTimeline() { localStorage.setItem(TIMELINE_KEY, JSON.stringify(timelines)); renderTimeline(); }
+        function saveDiary() { localStorage.setItem(DIARY_KEY, JSON.stringify(diaries)); renderDiary(); }
+        
+        function renderTimeline() {
+            const container = document.getElementById('timelineList');
+            if (!container) return;
+            if (timelines.length === 0) {
+                container.innerHTML = '<div class="empty-msg">暂无大事记，点击"新增大事记"添加</div>';
+                return;
+            }
+            timelines.sort((a, b) => b.id - a.id);
+            container.innerHTML = timelines.map(item => `
+                <div class="timeline-item" data-id="${item.id}">
+                    <span class="delete-item" data-id="${item.id}" data-type="timeline">🗑️</span>
+                    <div class="timeline-date">📅 ${item.date}</div>
+                    <div class="timeline-content">${item.content}</div>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.delete-item[data-type="timeline"]').forEach(btn => {
+                btn.onclick = (e) => { e.stopPropagation(); deleteTimeline(parseInt(btn.dataset.id)); };
+            });
+        }
+        
+        function renderDiary() {
+            const container = document.getElementById('diaryList');
+            if (!container) return;
+            if (diaries.length === 0) {
+                container.innerHTML = '<div class="empty-msg">暂无日记，点击"新增日记"添加</div>';
+                return;
+            }
+            diaries.sort((a, b) => b.id - a.id);
+            container.innerHTML = diaries.map(item => `
+                <div class="diary-item" data-id="${item.id}">
+                    <span class="delete-item" data-id="${item.id}" data-type="diary">🗑️</span>
+                    <div class="diary-date">📅 ${item.date}</div>
+                    <div class="diary-title">${item.title}</div>
+                    <div class="diary-preview">${item.content.substring(0, 80)}${item.content.length > 80 ? '...' : ''}</div>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.delete-item[data-type="diary"]').forEach(btn => {
+                btn.onclick = (e) => { e.stopPropagation(); deleteDiary(parseInt(btn.dataset.id)); };
+            });
+            
+            document.querySelectorAll('.diary-item').forEach(el => {
+                const id = parseInt(el.dataset.id);
+                el.onclick = () => { window.location.href = `diary-detail.html?id=${id}`; };
+            });
+        }
+        
+        function deleteTimeline(id) {
+            if (confirm('确定删除这条大事记？')) {
+                timelines = timelines.filter(item => item.id !== id);
+                saveTimeline();
+            }
+        }
+        
+        function deleteDiary(id) {
+            if (confirm('确定删除这篇日记？')) {
+                diaries = diaries.filter(item => item.id !== id);
+                saveDiary();
+            }
+        }
+        
+        function showAddTimelineModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h3>新增大事记</h3>
+                    <input type="text" id="timelineDate" placeholder="日期（如：2026年4月15日）" value="${new Date().toLocaleDateString()}">
+                    <textarea id="timelineContent" rows="3" placeholder="大事记内容"></textarea>
+                    <div class="modal-buttons">
+                        <button class="btn-cancel" id="cancelBtn">取消</button>
+                        <button class="btn-save" id="saveBtn">保存</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('cancelBtn').onclick = () => modal.remove();
+            document.getElementById('saveBtn').onclick = () => {
+                const date = document.getElementById('timelineDate').value;
+                const content = document.getElementById('timelineContent').value;
+                if (date && content) {
+                    timelines.push({ id: Date.now(), date, content });
+                    saveTimeline();
+                    modal.remove();
+                } else alert('请填写完整信息');
+            };
+        }
+        
+        function showAddDiaryModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h3>新增日记</h3>
+                    <input type="text" id="diaryDate" placeholder="日期（如：2026年4月15日）" value="${new Date().toLocaleDateString()}">
+                    <input type="text" id="diaryTitle" placeholder="标题">
+                    <textarea id="diaryContent" rows="5" placeholder="日记内容"></textarea>
+                    <div class="modal-buttons">
+                        <button class="btn-cancel" id="cancelBtn">取消</button>
+                        <button class="btn-save" id="saveBtn">保存</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('cancelBtn').onclick = () => modal.remove();
+            document.getElementById('saveBtn').onclick = () => {
+                const date = document.getElementById('diaryDate').value;
+                const title = document.getElementById('diaryTitle').value;
+                const content = document.getElementById('diaryContent').value;
+                if (date && title && content) {
+                    diaries.push({ id: Date.now(), date, title, content });
+                    saveDiary();
+                    modal.remove();
+                } else alert('请填写完整信息');
+            };
+        }
+        
+        document.getElementById('addTimelineBtn')?.addEventListener('click', showAddTimelineModal);
+        document.getElementById('addDiaryBtn')?.addEventListener('click', showAddDiaryModal);
+        
+        loadData();
+    </script>
+</body>
+</html>

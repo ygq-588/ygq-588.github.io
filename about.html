@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - 王子殿下的个人网站</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .interests-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .interest-card { background: white; border-radius: 16px; padding: 1.5rem; text-align: center; text-decoration: none; color: inherit; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: block; }
+        .interest-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .interest-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .interest-card h3 { margin: 0.5rem 0; color: #8B4513; }
+        .interest-card p { font-size: 0.85rem; color: #666; margin: 0.5rem 0; }
+        .interest-link { display: inline-block; margin-top: 0.8rem; font-size: 0.85rem; color: #D4AF37; font-weight: 500; }
+        .interest-link i { transition: transform 0.2s; }
+        .interest-card:hover .interest-link i { transform: translateX(3px); }
+        .traits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+        .trait-card { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .trait-card h3 { margin-bottom: 1rem; color: #8B4513; }
+        .trait-card ul { padding-left: 1.2rem; margin: 0; }
+        .trait-card li { margin: 0.5rem 0; line-height: 1.5; }
+        .values-card { background: linear-gradient(135deg, #f5f0e8, #e8e0d5); border-radius: 16px; padding: 1.5rem; margin: 1rem 0; }
+        .values-card p { margin: 0.8rem 0; }
+        .quote-section { text-align: center; margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #8B4513, #D4AF37); border-radius: 24px; color: white; }
+        .quote-section i { font-size: 2rem; opacity: 0.5; margin-bottom: 1rem; }
+        .quote-section p { font-size: 1.2rem; font-style: italic; max-width: 600px; margin: 0 auto; }
+        .quote-section cite { display: block; margin-top: 1rem; font-size: 0.9rem; opacity: 0.8; }
+        .gear-btn { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(135deg, #8B4513, #D4AF37); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 9999; }
+        .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; max-height: 500px; overflow-y: auto; }
+        .settings-menu button { width: 100%; padding: 12px 15px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; }
+        .settings-menu button:hover { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="about.html" class="active"><i class="fas fa-user"></i> 关于我</a></li>
+                <li><a href="daily.html"><i class="fas fa-calendar-day"></i> 我的日常</a></li>
+                <li><a href="gallery.html"><i class="fas fa-images"></i> 我的相册</a></li>
+                <li><a href="work.html"><i class="fas fa-briefcase"></i> 我的工作</a></li>
+                <li><a href="work-diary.html"><i class="fas fa-book"></i> 工作日记</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="gear-btn" id="gearBtn">⚙️</button>
+    <div class="settings-menu" id="settingsMenu">
+        <div style="padding:10px 15px; background:#8B4513; color:white;">🛠️ 开发者模式</div>
+        <div style="padding:8px 0;">
+            <button id="menuTextEdit"><span style="color:#4CAF50;">📝</span> 文本修改</button>
+            <button id="menuBgSettings"><span style="color:#2196F3;">🎨</span> 背景设置</button>
+            <button id="menuAvatarSettings"><span style="color:#FF9800;">👤</span> 头像设置</button>
+            <button id="menuPhotoManage"><span style="color:#9C27B0;">🖼️</span> 照片管理</button>
+            <button id="menuSiteInfo"><span style="color:#FF9800;">🏠</span> 站点信息</button>
+            <button id="menuChangePassword"><span style="color:#FF9800;">🔐</span> 修改密码</button>
+        </div>
+        <div style="border-top:1px solid #eee; padding:8px 0;">
+            <button id="menuFullEdit"><span style="color:#4CAF50;">🚀</span> 进入完整编辑模式</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="page-header">
+            <div class="container">
+                <h1>关于我</h1>
+                <p>了解王子殿下的个人世界、兴趣爱好和人生哲学</p>
+            </div>
+        </header>
+
+        <main class="container page-content">
+            <section class="content-section">
+                <h2><i class="fas fa-user-circle"></i> 个人简介</h2>
+                <p>我是王子殿下，一个热爱生活、追求卓越的人。我相信生活中的每一刻都值得被认真对待，每一个选择都塑造着我们的未来。</p>
+                <p>我的座右铭是："生活就像一场盛大的宴会，重要的是如何品味每一道菜肴。" 这句话代表了我对生活的态度——珍惜当下，享受过程，从每一段经历中汲取营养。</p>
+            </section>
+
+            <section class="content-section">
+                <h2><i class="fas fa-heart"></i> 兴趣爱好</h2>
+                <div class="interests-grid">
+                    <a href="reading.html" class="interest-card"><div class="interest-icon"><i class="fas fa-book"></i></div><h3>阅读</h3><p>热爱文学、历史和哲学类书籍，喜欢在文字中寻找智慧。</p><span class="interest-link">查看书单 <i class="fas fa-arrow-right"></i></span></a>
+                    <a href="music.html" class="interest-card"><div class="interest-icon"><i class="fas fa-music"></i></div><h3>音乐</h3><p>欣赏古典音乐和爵士乐，偶尔也会弹奏钢琴放松心情。</p><span class="interest-link">听歌单 <i class="fas fa-arrow-right"></i></span></a>
+                    <a href="food.html" class="interest-card"><div class="interest-icon"><i class="fas fa-utensils"></i></div><h3>美食</h3><p>喜欢探索各种美食，认为烹饪是一门艺术，品尝是一种享受。</p><span class="interest-link">探索美食 <i class="fas fa-arrow-right"></i></span></a>
+                    <a href="travel.html" class="interest-card"><div class="interest-icon"><i class="fas fa-plane"></i></div><h3>旅游</h3><p>热爱探索不同的文化和风景，相信旅行能开阔视野。</p><span class="interest-link">游记地图 <i class="fas fa-arrow-right"></i></span></a>
+                    <a href="sports.html" class="interest-card"><div class="interest-icon"><i class="fas fa-futbol"></i></div><h3>运动</h3><p>登山、羽毛球、乒乓球，在运动中挥洒汗水，挑战自我。</p><span class="interest-link">我的运动 <i class="fas fa-arrow-right"></i></span></a>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2><i class="fas fa-graduation-cap"></i> 价值观与信念</h2>
+                <div class="values-card">
+                    <p><strong>诚信为本：</strong> 我相信诚信是人际关系的基石，也是个人品格的体现。</p>
+                    <p><strong>持续学习：</strong> 世界在不断变化，只有持续学习才能跟上时代的步伐。</p>
+                    <p><strong>平衡生活：</strong> 工作与生活的平衡对于身心健康至关重要。</p>
+                    <p><strong>感恩之心：</strong> 对生活中的美好时刻保持感恩，对帮助过自己的人心存感激。</p>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2><i class="fas fa-star"></i> 个人特质</h2>
+                <div class="traits-grid">
+                    <div class="trait-card"><h3><i class="fas fa-check-circle" style="color:#D4AF37;"></i> 优势</h3><ul><li>思维缜密，善于分析问题</li><li>有强烈的责任感和担当精神</li><li>具备良好的沟通和协调能力</li><li>对新事物保持好奇心和探索欲</li><li>注重细节，追求完美</li></ul></div>
+                    <div class="trait-card"><h3><i class="fas fa-bullseye" style="color:#D4AF37;"></i> 目标</h3><ul><li>不断提升个人能力和素养</li><li>在专业领域取得卓越成就</li><li>建立有意义的人际关系</li><li>为社会创造积极价值</li><li>保持身心健康，享受生活</li></ul></div>
+                </div>
+            </section>
+
+            <section class="quote-section">
+                <i class="fas fa-quote-left"></i>
+                <p>真正的贵族不在于血统，而在于品格；真正的财富不在于拥有，而在于分享。</p>
+                <cite>— 王子殿下的人生哲学</cite>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <p class="footer-text">个人网站 © 2026 - 展示我的世界</p>
+            <div class="footer-social"><a href="#" class="social-link"><i class="fab fa-weixin"></i></a><a href="#" class="social-link"><i class="fab fa-weibo"></i></a><a href="#" class="social-link"><i class="fab fa-github"></i></a><a href="#" class="social-link"><i class="fab fa-linkedin"></i></a></div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/universal-settings.js"></script>
+
+    <script>
+        (function() {
+            const PASSWORD_KEY = 'site_password';
+            const DEFAULT_PASSWORD = '12345';
+            if (!localStorage.getItem(PASSWORD_KEY)) localStorage.setItem(PASSWORD_KEY, DEFAULT_PASSWORD);
+            const gearBtn = document.getElementById('gearBtn');
+            const menu = document.getElementById('settingsMenu');
+            if (gearBtn && menu) {
+                gearBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const lastAuth = localStorage.getItem('last_auth_time');
+                    if (lastAuth && (Date.now() - parseInt(lastAuth)) < 10 * 60 * 1000) { menu.style.display = 'block'; return; }
+                    const inputPwd = prompt('🔐 请输入密码：');
+                    if (inputPwd === localStorage.getItem(PASSWORD_KEY)) { localStorage.setItem('last_auth_time', Date.now()); menu.style.display = 'block'; }
+                    else alert('密码错误！');
+                };
+            }
+            const changePwdBtn = document.getElementById('menuChangePassword');
+            if (changePwdBtn) {
+                changePwdBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const oldPwd = prompt('请输入当前密码：');
+                    if (oldPwd !== localStorage.getItem(PASSWORD_KEY)) { alert('当前密码错误！'); return; }
+                    const newPwd = prompt('请输入新密码：');
+                    if (newPwd && newPwd.length > 0) { localStorage.setItem(PASSWORD_KEY, newPwd); alert('✅ 密码修改成功！'); }
+                    else alert('密码不能为空');
+                    menu.style.display = 'none';
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

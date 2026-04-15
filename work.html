@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的工作 - 王子殿下的个人网站</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .skill-bar { margin-bottom: 1rem; }
+        .skill-name { display: flex; justify-content: space-between; margin-bottom: 0.3rem; font-weight: 500; }
+        .skill-level { height: 8px; border-radius: 4px; transition: width 1s ease; }
+        .gear-btn { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(135deg, #8B4513, #D4AF37); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 9999; }
+        .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; max-height: 500px; overflow-y: auto; }
+        .settings-menu button { width: 100%; padding: 12px 15px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; }
+        .settings-menu button:hover { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="about.html"><i class="fas fa-user"></i> 关于我</a></li>
+                <li><a href="daily.html"><i class="fas fa-calendar-day"></i> 我的日常</a></li>
+                <li><a href="gallery.html"><i class="fas fa-images"></i> 我的相册</a></li>
+                <li><a href="work.html" class="active"><i class="fas fa-briefcase"></i> 我的工作</a></li>
+                <li><a href="work-diary.html"><i class="fas fa-book"></i> 工作日记</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="gear-btn" id="gearBtn">⚙️</button>
+    <div class="settings-menu" id="settingsMenu">
+        <div style="padding:10px 15px; background:#8B4513; color:white;">🛠️ 开发者模式</div>
+        <div style="padding:8px 0;">
+            <button id="menuTextEdit"><span style="color:#4CAF50;">📝</span> 文本修改</button>
+            <button id="menuBgSettings"><span style="color:#2196F3;">🎨</span> 背景设置</button>
+            <button id="menuAvatarSettings"><span style="color:#FF9800;">👤</span> 头像设置</button>
+            <button id="menuPhotoManage"><span style="color:#9C27B0;">🖼️</span> 照片管理</button>
+            <button id="menuSiteInfo"><span style="color:#FF9800;">🏠</span> 站点信息</button>
+            <button id="menuChangePassword"><span style="color:#FF9800;">🔐</span> 修改密码</button>
+        </div>
+        <div style="border-top:1px solid #eee; padding:8px 0;">
+            <button id="menuFullEdit"><span style="color:#4CAF50;">🚀</span> 进入完整编辑模式</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="page-header">
+            <div class="container">
+                <h1>我的工作</h1>
+                <p>了解我的专业领域、工作内容和职业发展</p>
+            </div>
+        </header>
+
+        <main class="container page-content">
+            <section class="content-section">
+                <h2><i class="fas fa-briefcase"></i> 职业概述</h2>
+                <div class="diary-entry">
+                    <div class="diary-date"><i class="fas fa-user-tie"></i> 当前职位</div>
+                    <div class="diary-content">
+                        <p>我目前担任<strong>高级项目经理</strong>，专注于数字化转型和创新项目管理。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="quote-section">
+                <blockquote><i class="fas fa-quote-left"></i><p>领导力的本质不是命令和控制，而是服务和赋能。</p><cite>— 王子殿下的工作哲学</cite></blockquote>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <p class="footer-text">个人网站 © 2026 - 展示我的世界</p>
+            <div class="footer-social"><a href="#" class="social-link"><i class="fab fa-weixin"></i></a><a href="#" class="social-link"><i class="fab fa-weibo"></i></a><a href="#" class="social-link"><i class="fab fa-github"></i></a><a href="#" class="social-link"><i class="fab fa-linkedin"></i></a></div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/universal-settings.js"></script>
+
+    <script>
+        (function() {
+            const PASSWORD_KEY = 'site_password';
+            const DEFAULT_PASSWORD = '12345';
+            if (!localStorage.getItem(PASSWORD_KEY)) localStorage.setItem(PASSWORD_KEY, DEFAULT_PASSWORD);
+            const gearBtn = document.getElementById('gearBtn');
+            const menu = document.getElementById('settingsMenu');
+            if (gearBtn && menu) {
+                gearBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const lastAuth = localStorage.getItem('last_auth_time');
+                    if (lastAuth && (Date.now() - parseInt(lastAuth)) < 10 * 60 * 1000) { menu.style.display = 'block'; return; }
+                    const inputPwd = prompt('🔐 请输入密码：');
+                    if (inputPwd === localStorage.getItem(PASSWORD_KEY)) { localStorage.setItem('last_auth_time', Date.now()); menu.style.display = 'block'; }
+                    else alert('密码错误！');
+                };
+            }
+            const changePwdBtn = document.getElementById('menuChangePassword');
+            if (changePwdBtn) {
+                changePwdBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const oldPwd = prompt('请输入当前密码：');
+                    if (oldPwd !== localStorage.getItem(PASSWORD_KEY)) { alert('当前密码错误！'); return; }
+                    const newPwd = prompt('请输入新密码：');
+                    if (newPwd && newPwd.length > 0) { localStorage.setItem(PASSWORD_KEY, newPwd); alert('✅ 密码修改成功！'); }
+                    else alert('密码不能为空');
+                    menu.style.display = 'none';
+                };
+            }
+        })();
+    </script>
+</body>
+</html>

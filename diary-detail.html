@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日记详情 - 王子殿下的个人网站</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(145deg, #f5f0e8 0%, #e8e0d5 100%); margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .back-btn { display: inline-block; margin-bottom: 1.5rem; color: #8B4513; text-decoration: none; font-weight: bold; }
+        .back-btn:hover { text-decoration: underline; }
+        .diary-date { color: #8B4513; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .diary-title { font-size: 1.8rem; font-weight: bold; color: #333; margin-bottom: 1rem; }
+        .diary-content { line-height: 1.8; color: #555; white-space: pre-wrap; }
+        .edit-btn { position: fixed; bottom: 30px; right: 30px; background: #4CAF50; color: white; border: none; border-radius: 50px; padding: 12px 24px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .edit-mode textarea { width: 100%; padding: 12px; border: 2px solid #D4AF37; border-radius: 8px; font-family: inherit; font-size: 1rem; line-height: 1.6; }
+        .edit-mode .diary-title input { width: 100%; font-size: 1.8rem; font-weight: bold; border: 2px solid #D4AF37; border-radius: 8px; padding: 8px; margin-bottom: 1rem; }
+        .save-btn { background: #2196F3; margin-right: 10px; }
+        .cancel-btn { background: #999; }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <a href="work-diary.html" class="back-btn"><i class="fas fa-arrow-left"></i> 返回工作日记</a>
+        <div id="diaryContent"></div>
+    </div>
+    <button id="editToggleBtn" class="edit-btn">✏️ 编辑</button>
+
+    <script>
+        const DIARY_KEY = 'prince_diaries';
+        let currentDiary = null;
+        let editMode = false;
+        
+        function getDiaryId() {
+            const params = new URLSearchParams(window.location.search);
+            return parseInt(params.get('id'));
+        }
+        
+        function loadDiary() {
+            const id = getDiaryId();
+            const saved = localStorage.getItem(DIARY_KEY);
+            if (saved) {
+                const diaries = JSON.parse(saved);
+                currentDiary = diaries.find(d => d.id === id);
+            }
+            if (!currentDiary) {
+                document.getElementById('diaryContent').innerHTML = '<p style="text-align:center;">日记不存在或已被删除</p>';
+                document.getElementById('editToggleBtn').style.display = 'none';
+                return;
+            }
+            renderViewMode();
+        }
+        
+        function renderViewMode() {
+            const container = document.getElementById('diaryContent');
+            container.innerHTML = `
+                <div class="diary-date">📅 ${currentDiary.date}</div>
+                <div class="diary-title">${escapeHtml(currentDiary.title)}</div>
+                <div class="diary-content">${escapeHtml(currentDiary.content).replace(/\n/g, '<br>')}</div>
+            `;
+            document.getElementById('editToggleBtn').textContent = '✏️ 编辑';
+            editMode = false;
+        }
+        
+        function renderEditMode() {
+            const container = document.getElementById('diaryContent');
+            container.innerHTML = `
+                <div class="diary-date">📅 ${currentDiary.date}</div>
+                <div class="diary-title"><input type="text" id="editTitle" value="${escapeHtml(currentDiary.title)}"></div>
+                <textarea id="editContent" rows="15">${escapeHtml(currentDiary.content)}</textarea>
+                <div style="margin-top: 1rem; display: flex; gap: 10px;">
+                    <button id="saveEditBtn" class="edit-btn save-btn" style="position: static;">💾 保存</button>
+                    <button id="cancelEditBtn" class="edit-btn cancel-btn" style="position: static; background:#999;">取消</button>
+                </div>
+            `;
+            document.getElementById('editToggleBtn').textContent = '👁️ 查看模式';
+            editMode = true;
+            
+            document.getElementById('saveEditBtn').onclick = saveDiary;
+            document.getElementById('cancelEditBtn').onclick = () => { renderViewMode(); };
+        }
+        
+        function saveDiary() {
+            const newTitle = document.getElementById('editTitle').value;
+            const newContent = document.getElementById('editContent').value;
+            if (newTitle && newContent) {
+                currentDiary.title = newTitle;
+                currentDiary.content = newContent;
+                
+                const saved = localStorage.getItem(DIARY_KEY);
+                if (saved) {
+                    const diaries = JSON.parse(saved);
+                    const index = diaries.findIndex(d => d.id === currentDiary.id);
+                    if (index !== -1) {
+                        diaries[index] = currentDiary;
+                        localStorage.setItem(DIARY_KEY, JSON.stringify(diaries));
+                    }
+                }
+                renderViewMode();
+                alert('✅ 日记已保存');
+            } else {
+                alert('请填写完整信息');
+            }
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        document.getElementById('editToggleBtn').onclick = () => {
+            if (editMode) renderViewMode();
+            else renderEditMode();
+        };
+        
+        loadDiary();
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王子殿下的个人网站</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .gear-btn { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(135deg, #8B4513, #D4AF37); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 9999; }
+        .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; }
+        .settings-menu button { width: 100%; padding: 12px 15px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; }
+        .settings-menu button:hover { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="about.html"><i class="fas fa-user"></i> 关于我</a></li>
+                <li><a href="daily.html"><i class="fas fa-calendar-day"></i> 我的日常</a></li>
+                <li><a href="gallery.html"><i class="fas fa-images"></i> 我的相册</a></li>
+                <li><a href="work.html"><i class="fas fa-briefcase"></i> 我的工作</a></li>
+                <li><a href="work-diary.html"><i class="fas fa-book"></i> 工作日记</a></li>
+            </ul>
+            <div class="nav-toggle"><i class="fas fa-bars"></i></div>
+        </div>
+    </nav>
+
+    <button class="gear-btn" id="gearBtn">⚙️</button>
+    <div class="settings-menu" id="settingsMenu">
+        <div style="padding:10px 15px; background:#8B4513; color:white;">🛠️ 开发者模式</div>
+        <div style="padding:8px 0;">
+            <button id="menuTextEdit"><span style="color:#4CAF50;">📝</span> 文本修改</button>
+            <button id="menuBgSettings"><span style="color:#2196F3;">🎨</span> 背景设置</button>
+            <button id="menuAvatarSettings"><span style="color:#FF9800;">👤</span> 头像设置</button>
+            <button id="menuPhotoManage"><span style="color:#9C27B0;">🖼️</span> 照片管理</button>
+            <button id="menuSiteInfo"><span style="color:#FF9800;">🏠</span> 站点信息</button>
+            <button id="menuChangePassword"><span style="color:#FF9800;">🔐</span> 修改密码</button>
+        </div>
+        <div style="border-top:1px solid #eee; padding:8px 0;">
+            <button id="menuFullEdit"><span style="color:#4CAF50;">🚀</span> 进入完整编辑模式</button>
+        </div>
+    </div>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-avatar-container">
+                <div class="hero-avatar" id="draggable-avatar" style="margin-left: 2rem !important;" data-draggable="false">
+                    <img src="images/avatar.jpg" alt="王子殿下头像" id="avatarImage">
+                    <div class="avatar-crown"><i class="fas fa-crown"></i></div>
+                </div>
+                <div class="hero-text">
+                    <h1>欢迎来到王子殿下的世界</h1>
+                    <p class="hero-subtitle">探索我的生活、工作和创意空间</p>
+                    <div class="hero-buttons">
+                        <a href="about.html" class="btn btn-primary">了解我</a>
+                        <a href="gallery.html" class="btn btn-secondary">查看相册</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-decoration">
+            <div class="decoration-circle"></div>
+            <div class="decoration-circle"></div>
+            <div class="decoration-circle"></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="intro-section">
+            <h2>网站概览</h2>
+            <p class="intro-text">这个网站展示了王子殿下的个人世界，包含四个主要部分：关于我、我的日常、我的相册、我的工作和我的工作日记。</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-user-circle"></i></div>
+                    <h3>关于我</h3>
+                    <p>了解王子殿下的个人背景、兴趣爱好和人生哲学。</p>
+                    <a href="about.html" class="feature-link">了解更多 <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <h3>我的日常</h3>
+                    <p>记录日常生活、习惯和有趣的活动安排。</p>
+                    <a href="daily.html" class="feature-link">查看日常 <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-images"></i></div>
+                    <h3>我的相册</h3>
+                    <p>展示精彩瞬间、旅行照片和个人收藏。</p>
+                    <a href="gallery.html" class="feature-link">浏览相册 <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-briefcase"></i></div>
+                    <h3>工作与日记</h3>
+                    <p>了解我的工作内容和记录工作心得。</p>
+                    <a href="work.html" class="feature-link">探索工作 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="quote-section">
+            <blockquote>
+                <i class="fas fa-quote-left"></i>
+                <p>生活就像一场盛大的宴会，重要的是如何品味每一道菜肴。</p>
+                <cite>— 王子殿下</cite>
+            </blockquote>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <p class="footer-text">个人网站 © 2026 - 展示我的世界</p>
+            <div class="footer-social">
+                <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/universal-settings.js"></script>
+</body>
+</html>
