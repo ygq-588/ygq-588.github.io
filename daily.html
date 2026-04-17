@@ -9,9 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         .gear-btn { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(135deg, #8B4513, #D4AF37); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 9999; }
+        .vip-btn { position: fixed; top: 20px; right: 70px; width: auto; padding: 0 12px; height: 40px; background: linear-gradient(135deg, #D4AF37, #FFD700); color: #8B4513; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: bold; z-index: 9999; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .vip-btn:hover { transform: scale(1.05); background: linear-gradient(135deg, #FFD700, #FFC107); }
         .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; max-height: 500px; overflow-y: auto; }
         .settings-menu button { width: 100%; padding: 12px 15px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; }
         .settings-menu button:hover { background: #f0f0f0; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .info-card { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s; position: relative; }
+        .info-card:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .card-title { font-size: 1.2rem; font-weight: bold; color: #8B4513; margin-bottom: 0.8rem; border-left: 3px solid #D4AF37; padding-left: 10px; }
+        .card-content { color: #555; line-height: 1.6; }
+        .add-card { background: rgba(245,240,230,0.5); border: 2px dashed #D4AF37; display: flex; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; min-height: 180px; }
+        .add-card .card-title { border-left: none; }
+        .footer-stats { margin-top: 1rem; font-size: 12px; opacity: 0.7; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .wechat-contact { margin-top: 0.5rem; font-size: 12px; opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -24,11 +35,13 @@
                 <li><a href="daily.html" class="active"><i class="fas fa-calendar-day"></i> 我的日常</a></li>
                 <li><a href="gallery.html"><i class="fas fa-images"></i> 我的相册</a></li>
                 <li><a href="work.html"><i class="fas fa-briefcase"></i> 我的工作</a></li>
-                <li><a href="work-diary.html"><i class="fas fa-book"></i> 工作日记</a></li>
+                <li><a href="work-diary.html"><i class="fas fa-book"></i> 我的日记</a></li>
             </ul>
+            <div class="nav-toggle"><i class="fas fa-bars"></i></div>
         </div>
     </nav>
 
+    <button class="vip-btn" id="vipBtn">👑 VIP会员</button>
     <button class="gear-btn" id="gearBtn">⚙️</button>
     <div class="settings-menu" id="settingsMenu">
         <div style="padding:10px 15px; background:#8B4513; color:white;">🛠️ 开发者模式</div>
@@ -49,23 +62,33 @@
         <header class="page-header">
             <div class="container">
                 <h1>我的日常</h1>
-                <p>记录日常生活、习惯和有趣的活动安排</p>
+                <p>记录生活点滴，分享每日感悟</p>
             </div>
         </header>
 
         <main class="container page-content">
-            <section class="content-section">
-                <h2><i class="fas fa-sun"></i> 每日作息</h2>
-                <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-bed"></i></div><h3>早晨 (6:00-8:00)</h3><ul><li>6:00 - 起床，喝一杯温水</li><li>6:15 - 晨间冥想和呼吸练习</li><li>6:45 - 轻度运动或瑜伽</li><li>7:15 - 阅读新闻和计划当日事项</li><li>7:45 - 营养早餐</li></ul></div>
-                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-briefcase"></i></div><h3>日间 (8:00-18:00)</h3><ul><li>8:00 - 开始工作/学习</li><li>10:30 - 短暂休息，补充水分</li><li>12:30 - 午餐时间</li><li>13:00 - 午休或散步</li><li>15:30 - 下午茶时间</li><li>17:30 - 总结当日工作</li></ul></div>
-                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-moon"></i></div><h3>晚间 (18:00-22:00)</h3><ul><li>18:30 - 晚餐时间</li><li>19:30 - 个人爱好时间</li><li>20:30 - 阅读或学习新技能</li><li>21:30 - 放松和反思当日</li><li>22:00 - 准备休息</li></ul></div>
+            <div class="cards-grid" id="dailyCardsGrid">
+                <div class="info-card">
+                    <div class="card-title">📖 流水与回响</div>
+                    <div class="card-content">在这个倍速播放的时代，我选择按下暂停键。</div>
                 </div>
-            </section>
-
-            <section class="quote-section">
-                <blockquote><i class="fas fa-quote-left"></i><p>优秀不是一种行为，而是一种习惯。我们日复一日做的事情，最终决定了我们成为什么样的人。</p><cite>— 王子殿下的日常哲学</cite></blockquote>
-            </section>
+                <div class="info-card">
+                    <div class="card-title">🎨 兴趣爱好</div>
+                    <div class="card-content">阅读、音乐、美食、旅行、运动，探索生活的无限可能。</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-title">💭 心情日记</div>
+                    <div class="card-content">思想的冥思是行动的前奏，行动的灵魂，这几年的随意不经意间造就了这许多的点点滴滴。。。。也拯救一个人的灵魂。</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-title">🕊️ 自由自在</div>
+                    <div class="card-content">睡到自然醒。但只有经历过的人才知道，自由是需要极度自律来支撑的。心里是踏实的。</div>
+                </div>
+                <div class="add-card" id="addDailyCard">
+                    <div class="card-title">➕ 添加新模块</div>
+                    <div class="card-content" style="font-size: 12px;">点击新增内容卡片</div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -73,11 +96,114 @@
         <div class="footer-content">
             <div class="footer-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
             <p class="footer-text">个人网站 © 2026 - 展示我的世界</p>
-            <div class="footer-social"><a href="#" class="social-link"><i class="fab fa-weixin"></i></a><a href="#" class="social-link"><i class="fab fa-weibo"></i></a><a href="#" class="social-link"><i class="fab fa-github"></i></a><a href="#" class="social-link"><i class="fab fa-linkedin"></i></a></div>
+            <div class="footer-stats">
+                <span>📊 总访问量：<span id="totalPV">0</span> 次</span>
+                <span>📅 今日访问：<span id="todayPV">0</span> 次</span>
+            </div>
+            <div class="wechat-contact">📱 联系我：微信 y17580761</div>
+            <div class="footer-social">
+                <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+            </div>
         </div>
     </footer>
 
     <script src="js/script.js"></script>
     <script src="js/universal-settings.js"></script>
+    <script>
+        // 来访统计
+        function updateStats() {
+            const today = new Date().toDateString();
+            let totalPV = localStorage.getItem('totalPV') || 0;
+            let lastDate = localStorage.getItem('lastVisitDate');
+            let todayPV = localStorage.getItem('todayPV') || 0;
+            if (lastDate !== today) { todayPV = 0; localStorage.setItem('lastVisitDate', today); }
+            totalPV = parseInt(totalPV) + 1;
+            todayPV = parseInt(todayPV) + 1;
+            localStorage.setItem('totalPV', totalPV);
+            localStorage.setItem('todayPV', todayPV);
+            document.getElementById('totalPV').innerText = totalPV;
+            document.getElementById('todayPV').innerText = todayPV;
+        }
+        updateStats();
+        
+        // 添加新模块
+        document.getElementById('addDailyCard').onclick = () => {
+            const newTitle = prompt('请输入模块标题：');
+            if (!newTitle) return;
+            const newContent = prompt('请输入模块内容：');
+            if (!newContent) return;
+            const cardsGrid = document.getElementById('dailyCardsGrid');
+            const addCard = document.getElementById('addDailyCard');
+            const newCard = document.createElement('div');
+            newCard.className = 'info-card';
+            newCard.innerHTML = `<div class="card-title">📌 ${newTitle}</div><div class="card-content">${newContent}</div>`;
+            cardsGrid.insertBefore(newCard, addCard);
+            alert('✅ 新模块已添加！');
+        };
+        
+        // VIP弹窗
+        document.getElementById('vipBtn').onclick = () => {
+            const modal = document.createElement('div');
+            modal.className = 'vip-modal';
+            modal.innerHTML = `
+                <div class="vip-content">
+                    <span class="vip-close">&times;</span>
+                    <h2>👑 VIP会员升级</h2>
+                    <div class="vip-price">💎 月费版：¥19元/月 &nbsp;&nbsp;|&nbsp;&nbsp; 💎 年费版：¥99元/年</div>
+                    <div class="vip-qrcodes">
+                        <div><img src="images/wechat.jpg" alt="微信收款码" onerror="this.style.display='none'"><p>微信支付</p></div>
+                        <div><img src="images/alipay.jpg" alt="支付宝收款码" onerror="this.style.display='none'"><p>支付宝支付</p></div>
+                    </div>
+                    <div style="font-size: 12px; color: #666;">📱 微信：y17580761 &nbsp;&nbsp;付款后联系我获取激活码</div>
+                    <input type="text" id="vipCode" class="vip-input" placeholder="请输入激活码">
+                    <button id="unlockVip" class="vip-unlock-btn">🔓 立即解锁</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector('.vip-close').onclick = () => modal.remove();
+            modal.querySelector('#unlockVip').onclick = () => {
+                const code = document.getElementById('vipCode').value;
+                if (code === 'VIP17580761') {
+                    localStorage.setItem('isPro', 'true');
+                    alert('✅ VIP解锁成功！刷新页面后所有功能可用！');
+                    modal.remove();
+                } else { alert('❌ 激活码错误！'); }
+            };
+        };
+        
+        // 密码保护
+        (function() {
+            const PASSWORD_KEY = 'site_password';
+            const DEFAULT_PASSWORD = '12345';
+            if (!localStorage.getItem(PASSWORD_KEY)) localStorage.setItem(PASSWORD_KEY, DEFAULT_PASSWORD);
+            const gearBtn = document.getElementById('gearBtn');
+            const menu = document.getElementById('settingsMenu');
+            if (gearBtn && menu) {
+                gearBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const lastAuth = sessionStorage.getItem('last_auth_time');
+                    if (lastAuth && (Date.now() - parseInt(lastAuth)) < 10 * 60 * 1000) { menu.style.display = 'block'; return; }
+                    const inputPwd = prompt('🔐 请输入密码：');
+                    if (inputPwd === localStorage.getItem(PASSWORD_KEY)) { sessionStorage.setItem('last_auth_time', Date.now()); menu.style.display = 'block'; }
+                    else alert('密码错误！');
+                };
+            }
+            const changePwdBtn = document.getElementById('menuChangePassword');
+            if (changePwdBtn) {
+                changePwdBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const oldPwd = prompt('请输入当前密码：');
+                    if (oldPwd !== localStorage.getItem(PASSWORD_KEY)) { alert('当前密码错误！'); return; }
+                    const newPwd = prompt('请输入新密码：');
+                    if (newPwd && newPwd.length > 0) { localStorage.setItem(PASSWORD_KEY, newPwd); alert('✅ 密码修改成功！'); }
+                    else alert('密码不能为空');
+                    menu.style.display = 'none';
+                };
+            }
+        })();
+    </script>
 </body>
 </html>
