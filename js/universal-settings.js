@@ -60,7 +60,7 @@ function getRemainingLockTime() {
 }
 
 function isAuthenticated() {
-    const lastAuth = localStorage.getItem(AUTH_TIME_KEY);
+    const lastAuth = sessionStorage.getItem(AUTH_TIME_KEY);
     if (lastAuth && (Date.now() - parseInt(lastAuth)) < 10 * 60 * 1000) {
         return true;
     }
@@ -68,11 +68,11 @@ function isAuthenticated() {
 }
 
 function setAuthenticated() {
-    localStorage.setItem(AUTH_TIME_KEY, Date.now());
+    sessionStorage.setItem(AUTH_TIME_KEY, Date.now());
 }
 
 function clearAuthentication() {
-    localStorage.removeItem(AUTH_TIME_KEY);
+    sessionStorage.removeItem(AUTH_TIME_KEY);
 }
 
 function showPasswordDialog(callback) {
@@ -195,8 +195,6 @@ function showChangePasswordDialog() {
     cancelBtn.onclick = () => overlay.remove();
 }
 
-// ========== 以下为原有功能（背景、头像、文本编辑等，保持不变） ==========
-
 // ========== IndexedDB 初始化 ==========
 const SETTINGS_DB_NAME = 'PrinceSettingsDB';
 const SETTINGS_STORE = 'settings';
@@ -243,13 +241,32 @@ async function loadImageFromDB(key) {
 async function applyBackground() {
     const userBgColor = localStorage.getItem('pageBackground');
     const userBgImage = await loadImageFromDB('backgroundImage');
+    const overlayOpacity = localStorage.getItem('bgOverlayOpacity') || '0';
     
-    // 如果用户有自定义背景，使用用户的
+    const existingOverlay = document.getElementById('bgOverlay');
+    if (existingOverlay) existingOverlay.remove();
+    
     if (userBgImage) {
         document.body.style.backgroundImage = `url(${userBgImage})`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundAttachment = 'fixed';
         document.body.style.backgroundColor = '';
+        
+        if (overlayOpacity !== '0') {
+            const overlay = document.createElement('div');
+            overlay.id = 'bgOverlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,${overlayOpacity});
+                pointer-events: none;
+                z-index: -1;
+            `;
+            document.body.appendChild(overlay);
+        }
         return;
     }
     
@@ -259,12 +276,12 @@ async function applyBackground() {
         return;
     }
     
-    // 没有自定义背景时，使用默认背景图片
     document.body.style.backgroundImage = "url('images/default-bg.jpg')";
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundAttachment = 'fixed';
     document.body.style.backgroundPosition = 'center';
 }
+
 // ========== 背景设置对话框 ==========
 function openBackgroundSettings() {
     const overlay = document.createElement('div');
@@ -281,8 +298,8 @@ function openBackgroundSettings() {
         border-radius: 12px;
         box-shadow: 0 15px 40px rgba(0,0,0,0.2);
         z-index: 10001;
-        min-width: 350px;
-        max-width: 500px;
+        min-width: 280px;
+        max-width: 400px;
         cursor: default;
     `;
     
@@ -483,8 +500,8 @@ function openAvatarSettings() {
         border-radius: 12px;
         box-shadow: 0 15px 40px rgba(0,0,0,0.2);
         z-index: 10001;
-        min-width: 300px;
-        max-width: 400px;
+        min-width: 260px;
+        max-width: 350px;
         cursor: default;
     `;
     
@@ -622,43 +639,99 @@ function openAvatarSettings() {
     };
 }
 
-// ========== 文本编辑功能 ==========
+// ========== 文本编辑功能（带保存/退出、编辑边框、颜色选择器优化、内容持久化） ==========
 let textEditMode = false;
 let textToolbar = null;
+let originalContent = new Map();
 
 function enableTextEdit() {
     if (textEditMode) {
-        disableTextEdit();
+        disableTextEdit(true);
         return;
     }
     textEditMode = true;
-    document.body.setAttribute('contenteditable', 'true');
-    document.body.style.outline = '2px solid #D4AF37';
+    
+    // 保存原始内容（用于取消恢复）
+    originalContent.clear();
+    document.querySelectorAll('body *').forEach(el => {
+        if (el.children.length === 0 && el.textContent && el.textContent.trim()) {
+            originalContent.set(el, el.innerHTML);
+        }
+    });
+    
+    // 添加编辑边框
+    document.querySelectorAll('body *').forEach(el => {
+        if (el.children.length === 0 && el.textContent && el.textContent.trim()) {
+            el.style.outline = '1px dashed #D4AF37';
+            el.style.cursor = 'text';
+            el.setAttribute('contenteditable', 'true');
+        }
+    });
+    
     showTextToolbar();
-    alert('✏️ 文本编辑模式已开启\n\n• 直接点击文字即可编辑\n• 选中文字可调整格式\n• 再次点击齿轮→文本修改可关闭');
+    alert('✏️ 文本编辑模式已开启\n\n• 直接点击文字即可编辑\n• 选中文字可调整格式\n• 编辑完成后点击"保存"');
 }
 
-function disableTextEdit() {
+function disableTextEdit(save = true) {
+    if (!save) {
+        // 恢复原始内容
+        originalContent.forEach((content, el) => {
+            el.innerHTML = content;
+        });
+    } else {
+        // 保存所有编辑过的内容到 localStorage
+        document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+            if (el.innerHTML !== originalContent.get(el)) {
+                const path = getElementPath(el);
+                localStorage.setItem(`saved_text_${path}`, el.innerHTML);
+            }
+        });
+    }
+    
     textEditMode = false;
-    document.body.removeAttribute('contenteditable');
-    document.body.style.outline = '';
+    document.querySelectorAll('body *').forEach(el => {
+        el.style.outline = '';
+        el.style.cursor = '';
+        el.removeAttribute('contenteditable');
+    });
+    
     if (textToolbar) {
         textToolbar.remove();
         textToolbar = null;
     }
+    
+    originalContent.clear();
+    if (save) alert('💾 修改已保存！刷新页面后仍保留');
+    else alert('❌ 已取消修改，恢复原内容');
 }
 
-function applyStyleToSelection(styleName, value) {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0 && !selection.isCollapsed) {
-        const range = selection.getRangeAt(0);
-        const span = document.createElement('span');
-        span.style[styleName] = value;
-        range.surroundContents(span);
-        selection.removeAllRanges();
-    } else {
-        alert('请先选中要修改的文字');
+// 获取元素路径（用于存储标识）
+function getElementPath(el) {
+    if (el.id) return el.id;
+    let path = [];
+    let parent = el;
+    while (parent && parent !== document.body) {
+        if (parent.className && typeof parent.className === 'string') {
+            path.unshift(parent.className.split(' ')[0]);
+        } else if (parent.tagName) {
+            path.unshift(parent.tagName.toLowerCase());
+        }
+        parent = parent.parentElement;
     }
+    return path.join('_');
+}
+
+// 页面加载时恢复保存的内容
+function restoreSavedContent() {
+    document.querySelectorAll('body *').forEach(el => {
+        if (el.children.length === 0 && el.textContent && el.textContent.trim()) {
+            const path = getElementPath(el);
+            const saved = localStorage.getItem(`saved_text_${path}`);
+            if (saved && saved !== el.innerHTML) {
+                el.innerHTML = saved;
+            }
+        }
+    });
 }
 
 function showTextToolbar() {
@@ -706,8 +779,9 @@ function showTextToolbar() {
                 <option value="1.2">1.2</option><option value="1.5" selected>1.5</option><option value="1.6">1.6</option><option value="1.8">1.8</option><option value="2.0">2.0</option>
             </select>
             <button id="toolbar-indent" style="padding:6px 12px;border:none;border-radius:20px;cursor:pointer;background:#f0f0f0;">首行缩进</button>
-            <input type="color" id="toolbar-color" style="width:36px;height:36px;border:none;border-radius:50%;cursor:pointer;border:2px solid #D4AF37;">
-            <button id="toolbar-close" style="padding:6px 15px;border:none;border-radius:20px;cursor:pointer;background:#f44336;color:white;">关闭</button>
+            <input type="color" id="toolbar-color" style="width:36px;height:36px;border:none;border-radius:50%;cursor:pointer;padding:0;" value="#D4AF37">
+            <button id="toolbar-save" style="padding:6px 15px;border:none;border-radius:20px;cursor:pointer;background:#4CAF50;color:white;font-weight:bold;">保存</button>
+            <button id="toolbar-cancel" style="padding:6px 15px;border:none;border-radius:20px;cursor:pointer;background:#999;color:white;">取消</button>
         </div>
     `;
     
@@ -747,9 +821,28 @@ function showTextToolbar() {
     document.getElementById('toolbar-fontsize').onchange = (e) => document.execCommand('fontSize', false, e.target.value);
     document.getElementById('toolbar-color').onchange = (e) => document.execCommand('foreColor', false, e.target.value);
     document.getElementById('toolbar-fontfamily').onchange = (e) => document.execCommand('fontName', false, e.target.value);
-    document.getElementById('toolbar-lineheight').onchange = (e) => applyStyleToSelection('lineHeight', e.target.value);
-    document.getElementById('toolbar-indent').onclick = () => applyStyleToSelection('textIndent', '2em');
-    document.getElementById('toolbar-close').onclick = () => disableTextEdit();
+    document.getElementById('toolbar-lineheight').onchange = (e) => {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+            const range = selection.getRangeAt(0);
+            const span = document.createElement('span');
+            span.style.lineHeight = e.target.value;
+            range.surroundContents(span);
+            selection.removeAllRanges();
+        }
+    };
+    document.getElementById('toolbar-indent').onclick = () => {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+            const range = selection.getRangeAt(0);
+            const span = document.createElement('span');
+            span.style.textIndent = '2em';
+            range.surroundContents(span);
+            selection.removeAllRanges();
+        }
+    };
+    document.getElementById('toolbar-save').onclick = () => disableTextEdit(true);
+    document.getElementById('toolbar-cancel').onclick = () => disableTextEdit(false);
 }
 
 // ========== 站点信息设置对话框 ==========
@@ -768,8 +861,8 @@ function openSiteSettings() {
         border-radius: 12px;
         box-shadow: 0 15px 40px rgba(0,0,0,0.2);
         z-index: 10001;
-        min-width: 400px;
-        max-width: 500px;
+        min-width: 350px;
+        max-width: 450px;
         cursor: default;
     `;
     
@@ -934,13 +1027,12 @@ function applySiteSettings() {
 function openPhotoManagement() { window.location.href = 'gallery.html'; }
 function enterFullEditMode() { alert('🚀 完整编辑模式\n\n后续支持板块增删改、拖拽排序等功能'); }
 
-// ========== 小齿轮菜单初始化（带密码保护） ==========
+// ========== 小齿轮菜单初始化 ==========
 function initUniversalSettings() {
     const gearBtn = document.getElementById('gearBtn');
     currentMenu = document.getElementById('settingsMenu');
     if (!gearBtn || !currentMenu) return;
     
-    // 确保菜单高度足够显示所有按钮
     currentMenu.style.maxHeight = '500px';
     currentMenu.style.overflowY = 'auto';
     
@@ -965,11 +1057,11 @@ function initUniversalSettings() {
     });
 }
 
-// 初始化密码
 initPassword();
 
 document.addEventListener('DOMContentLoaded', () => {
     initUniversalSettings();
     applyBackground();
     applySiteSettings();
+    restoreSavedContent();
 });

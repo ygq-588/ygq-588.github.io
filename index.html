@@ -9,27 +9,72 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         .gear-btn { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(135deg, #8B4513, #D4AF37); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 9999; }
-        .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; }
+        .vip-btn { position: fixed; top: 20px; right: 70px; width: auto; padding: 0 12px; height: 40px; background: linear-gradient(135deg, #D4AF37, #FFD700); color: #8B4513; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: bold; z-index: 9999; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .vip-btn:hover { transform: scale(1.05); background: linear-gradient(135deg, #FFD700, #FFC107); }
+        .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; max-height: 500px; overflow-y: auto; }
         .settings-menu button { width: 100%; padding: 12px 15px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; }
         .settings-menu button:hover { background: #f0f0f0; }
+        /* 欢迎弹窗样式 - 优化版 */
+        .welcome-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 20000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .welcome-content { background: #F9F9F7; border-radius: 24px; padding: 40px; width: 460px; max-width: 90%; text-align: center; box-shadow: 0 30px 50px rgba(0,0,0,0.2); position: relative; font-family: 'Noto Sans SC', sans-serif; }
+        .welcome-close { position: absolute; top: 20px; right: 25px; font-size: 24px; cursor: pointer; color: #999; transition: all 0.2s; }
+        .welcome-close:hover { color: #333; }
+        .welcome-title {font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 4px;
+    font-style: italic;
+    background: linear-gradient(135deg, #8B4513, #D4AF37, #C5A065);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block; }
+        .welcome-subtitle { font-size: 16px; color: #5D4037; margin-bottom: 20px; font-weight: 400; letter-spacing: 1px; }
+        .welcome-quote { font-size: 13px; color: #5D4037; margin-bottom: 30px; font-style: italic; }
+        .welcome-features { text-align: left; margin: 30px 0; padding: 0; list-style: none; }
+        .welcome-features li { margin: 22px 0; display: flex; align-items: flex-start; gap: 12px; }
+        .welcome-features li strong { color: #1A1A1A; font-weight: 700; display: block; margin-bottom: 6px; font-size: 16px; }
+        .welcome-features li span { color: #333333; font-size: 13px; line-height: 1.5; font-weight: 400; }
+        .welcome-price { margin: 25px 0 20px; padding: 15px 15px 10px 15px; background: transparent; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+        .welcome-price .vip-badge { font-size: 13px; font-weight: 600; color: #C5A065; letter-spacing: 1px; margin-bottom: 12px; }
+        .welcome-price .price-row { display: flex; justify-content: center; align-items: baseline; gap: 25px; flex-wrap: wrap; margin-bottom: 8px; }
+        .welcome-price .price-item { display: inline-block; }
+        .welcome-price .price-number { font-size: 32px; font-weight: 700; color: #1A1A1A; }
+        .welcome-price .price-number small { font-size: 14px; font-weight: 400; color: #888; }
+        .welcome-price .price-note { font-size: 12px; color: #aaa; margin-top: 8px; }
+        .welcome-btn { background: #1a1a1a; color: white; border: none; padding: 14px 30px; border-radius: 40px; cursor: pointer; font-size: 16px; font-weight: 600; width: 100%; margin-bottom: 12px; transition: all 0.3s; }
+        .welcome-btn:hover { background: #333; transform: translateY(-2px); }
+        .welcome-skip { background: none; border: none; color: #aaa; font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+        .welcome-skip:hover { color: #666; }
+        .footer-stats { margin-top: 1rem; font-size: 12px; opacity: 0.7; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .wechat-contact { margin-top: 0.5rem; font-size: 12px; opacity: 0.7; }
+        .vip-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 20001; display: flex; align-items: center; justify-content: center; }
+        .vip-content { background: white; border-radius: 20px; padding: 30px; width: 450px; max-width: 90%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; }
+        .vip-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #999; }
+        .vip-qrcodes { display: flex; justify-content: center; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+        .vip-qrcodes img { width: 120px; height: 120px; border: 1px solid #ddd; border-radius: 10px; }
+        .vip-input { width: 100%; padding: 10px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; text-align: center; }
+        .vip-unlock-btn { background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        .vip-price { background: linear-gradient(135deg, #8B4513, #D4AF37); color: white; padding: 10px; border-radius: 30px; margin: 15px 0; font-weight: bold; }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
+            <div class="welcome-title" style="font-weight: 900;">王子殿下</div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="active"><i class="fas fa-home"></i> 首页</a></li>
                 <li><a href="about.html"><i class="fas fa-user"></i> 关于我</a></li>
                 <li><a href="daily.html"><i class="fas fa-calendar-day"></i> 我的日常</a></li>
                 <li><a href="gallery.html"><i class="fas fa-images"></i> 我的相册</a></li>
                 <li><a href="work.html"><i class="fas fa-briefcase"></i> 我的工作</a></li>
-                <li><a href="work-diary.html"><i class="fas fa-book"></i> 工作日记</a></li>
+                <li><a href="work-diary.html"><i class="fas fa-book"></i> 我的日记</a></li>
             </ul>
             <div class="nav-toggle"><i class="fas fa-bars"></i></div>
         </div>
     </nav>
 
+    <button class="vip-btn" id="vipBtn">👑 VIP会员</button>
     <button class="gear-btn" id="gearBtn">⚙️</button>
     <div class="settings-menu" id="settingsMenu">
         <div style="padding:10px 15px; background:#8B4513; color:white;">🛠️ 开发者模式</div>
@@ -73,41 +118,16 @@
     <main class="container">
         <section class="intro-section">
             <h2>网站概览</h2>
-            <p class="intro-text">这个网站展示了王子殿下的个人世界，包含四个主要部分：关于我、我的日常、我的相册、我的工作和我的工作日记。</p>
+            <p class="intro-text">这个网站展示了王子殿下的个人世界，包含四个主要部分：关于我、我的日常、我的相册、我的工作和我的日记。</p>
             <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-user-circle"></i></div>
-                    <h3>关于我</h3>
-                    <p>了解王子殿下的个人背景、兴趣爱好和人生哲学。</p>
-                    <a href="about.html" class="feature-link">了解更多 <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
-                    <h3>我的日常</h3>
-                    <p>记录日常生活、习惯和有趣的活动安排。</p>
-                    <a href="daily.html" class="feature-link">查看日常 <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-images"></i></div>
-                    <h3>我的相册</h3>
-                    <p>展示精彩瞬间、旅行照片和个人收藏。</p>
-                    <a href="gallery.html" class="feature-link">浏览相册 <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-briefcase"></i></div>
-                    <h3>工作与日记</h3>
-                    <p>了解我的工作内容和记录工作心得。</p>
-                    <a href="work.html" class="feature-link">探索工作 <i class="fas fa-arrow-right"></i></a>
-                </div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-user-circle"></i></div><h3>关于我</h3><p>了解王子殿下的个人背景、兴趣爱好和人生哲学。</p><a href="about.html" class="feature-link">了解更多 <i class="fas fa-arrow-right"></i></a></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-calendar-alt"></i></div><h3>我的日常</h3><p>记录日常生活、习惯和有趣的活动安排。</p><a href="daily.html" class="feature-link">查看日常 <i class="fas fa-arrow-right"></i></a></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-images"></i></div><h3>我的相册</h3><p>展示精彩瞬间、旅行照片和个人收藏。</p><a href="gallery.html" class="feature-link">浏览相册 <i class="fas fa-arrow-right"></i></a></div>
+                <div class="feature-card"><div class="feature-icon"><i class="fas fa-briefcase"></i></div><h3>工作与日记</h3><p>了解我的工作内容和记录生活点滴。</p><a href="work.html" class="feature-link">探索工作 <i class="fas fa-arrow-right"></i></a></div>
             </div>
         </section>
-        
         <section class="quote-section">
-            <blockquote>
-                <i class="fas fa-quote-left"></i>
-                <p>生活就像一场盛大的宴会，重要的是如何品味每一道菜肴。</p>
-                <cite>— 王子殿下</cite>
-            </blockquote>
+            <blockquote><i class="fas fa-quote-left"></i><p>生活就像一场盛大的宴会，重要的是如何品味每一道菜肴。</p><cite>— 王子殿下</cite></blockquote>
         </section>
     </main>
 
@@ -115,6 +135,11 @@
         <div class="footer-content">
             <div class="footer-brand"><i class="fas fa-crown"></i><span>王子殿下</span></div>
             <p class="footer-text">个人网站 © 2026 - 展示我的世界</p>
+            <div class="footer-stats" id="visitStats">
+                <span>📊 总访问量：<span id="totalPV">0</span> 次</span>
+                <span>📅 今日访问：<span id="todayPV">0</span> 次</span>
+            </div>
+            <div class="wechat-contact">📱 联系我：微信 y17580761</div>
             <div class="footer-social">
                 <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
@@ -126,5 +151,122 @@
 
     <script src="js/script.js"></script>
     <script src="js/universal-settings.js"></script>
+    <script>
+        // 来访统计
+        function updateStats() {
+            const today = new Date().toDateString();
+            let totalPV = localStorage.getItem('totalPV') || 0;
+            let lastDate = localStorage.getItem('lastVisitDate');
+            let todayPV = localStorage.getItem('todayPV') || 0;
+            if (lastDate !== today) { todayPV = 0; localStorage.setItem('lastVisitDate', today); }
+            totalPV = parseInt(totalPV) + 1;
+            todayPV = parseInt(todayPV) + 1;
+            localStorage.setItem('totalPV', totalPV);
+            localStorage.setItem('todayPV', todayPV);
+            document.getElementById('totalPV').innerText = totalPV;
+            document.getElementById('todayPV').innerText = todayPV;
+        }
+        updateStats();
+        
+    // 欢迎弹窗（每次访问都弹出）
+setTimeout(() => {
+    const modal = document.createElement('div');
+    modal.className = 'welcome-modal';
+    modal.innerHTML = `
+        <div class="welcome-content">
+            <span class="welcome-close">&times;</span>
+            <div class="welcome-title" style="font-size: 32px; font-weight: 900; margin-bottom: 8px; letter-spacing: 4px; font-style: italic; background: linear-gradient(135deg, #1a1a1a, #333333, #1a1a1a); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; text-shadow: 0 0 3px rgba(0,0,0,0.3);">欢  迎  您</div>
+            <div class="welcome-subtitle">这一方天地，由您定义</div>
+            <div class="welcome-quote">在这里，<span style="font-size: 26px; font-style: italic; color: #C5A065; font-weight: 500;">30s</span> 把生活过成诗，把瞬间变成永恒。</div>
+            <ul class="welcome-features">
+                <li><strong>🖼️ 珍藏光影</strong><br><span>无论是高清大片还是生活碎片，这里都是您专属的云端画廊。</span></li>
+                <li><strong>📝 书写回响</strong><br><span>拒绝流水账，记录每一个灵光乍现的瞬间，让文字有温度。</span></li>
+                <li><strong>🎨 定制格调</strong><br><span>拒绝千篇一律，从字体到配色，您的网站由您全权定义。</span></li>
+            </ul>
+            <div class="welcome-price">
+                <div class="vip-badge">👑 解锁全部创作自由</div>
+                <div class="price-row">
+                    <span class="price-item"><span class="price-number">¥19</span><small>/月</small></span>
+                    <span class="price-item"><span class="price-number">¥99</span><small>/年</small></span>
+                </div>
+                <div class="price-note">仅需一杯咖啡的钱，换取一整年的体面</div>
+            </div>
+            <button class="welcome-btn" id="welcomeBtn">🚀 立即开启我的领地</button>
+            <button class="welcome-skip" id="welcomeSkipBtn">还是先看看吧</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.querySelector('.welcome-close').onclick = () => modal.remove();
+    modal.querySelector('#welcomeBtn').onclick = () => modal.remove();
+    modal.querySelector('#welcomeSkipBtn').onclick = () => modal.remove();
+}, 500);
+
+       // VIP弹窗
+document.getElementById('vipBtn').onclick = () => {
+    const modal = document.createElement('div');
+    modal.className = 'vip-modal';
+    modal.innerHTML = `
+        <div class="vip-content">
+            <span class="vip-close">&times;</span>
+            <h2>👑 VIP会员升级</h2>
+            <div class="vip-price">💎 月费版：¥19元/月 &nbsp;&nbsp;|&nbsp;&nbsp; 💎 年费版：¥99元/年</div>
+            <div class="vip-qrcodes" style="display: flex; justify-content: center; gap: 30px; margin: 20px 0; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <img src="images/wechat.png" alt="微信收款码" style="width: 180px; height: 240px; border: 1px solid #ddd; border-radius: 10px;">
+                    <p>微信支付</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="images/alipay.png" alt="支付宝收款码" style="width: 180px; height: 240px; border: 1px solid #ddd; border-radius: 10px;">
+                    <p>支付宝支付</p>
+                </div>
+            </div>
+            <div style="font-size: 12px; color: #666;">付款后联系我获取激活码</div>
+            <input type="text" id="vipCode" class="vip-input" placeholder="请输入激活码" style="width: 100%; padding: 10px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; text-align: center;">
+            <button id="unlockVip" class="vip-unlock-btn" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold;">🔓 立即解锁</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.querySelector('.vip-close').onclick = () => modal.remove();
+    modal.querySelector('#unlockVip').onclick = () => {
+        const code = document.getElementById('vipCode').value;
+        if (code === 'VIP17580761') {
+            localStorage.setItem('isPro', 'true');
+            alert('✅ VIP解锁成功！刷新页面后所有功能可用！');
+            modal.remove();
+        } else { alert('❌ 激活码错误！'); }
+    };
+};
+        
+        // 密码保护
+        (function() {
+            const PASSWORD_KEY = 'site_password';
+            const DEFAULT_PASSWORD = '12345';
+            if (!localStorage.getItem(PASSWORD_KEY)) localStorage.setItem(PASSWORD_KEY, DEFAULT_PASSWORD);
+            const gearBtn = document.getElementById('gearBtn');
+            const menu = document.getElementById('settingsMenu');
+            if (gearBtn && menu) {
+                gearBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const lastAuth = sessionStorage.getItem('last_auth_time');
+                    if (lastAuth && (Date.now() - parseInt(lastAuth)) < 10 * 60 * 1000) { menu.style.display = 'block'; return; }
+                    const inputPwd = prompt('🔐 请输入密码：');
+                    if (inputPwd === localStorage.getItem(PASSWORD_KEY)) { sessionStorage.setItem('last_auth_time', Date.now()); menu.style.display = 'block'; }
+                    else alert('密码错误！');
+                };
+            }
+            const changePwdBtn = document.getElementById('menuChangePassword');
+            if (changePwdBtn) {
+                changePwdBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const oldPwd = prompt('请输入当前密码：');
+                    if (oldPwd !== localStorage.getItem(PASSWORD_KEY)) { alert('当前密码错误！'); return; }
+                    const newPwd = prompt('请输入新密码：');
+                    if (newPwd && newPwd.length > 0) { localStorage.setItem(PASSWORD_KEY, newPwd); alert('✅ 密码修改成功！'); }
+                    else alert('密码不能为空');
+                    menu.style.display = 'none';
+                };
+            }
+        })();
+    </script>
 </body>
 </html>

@@ -14,18 +14,15 @@
         .settings-menu { position: fixed; top: 70px; right: 20px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; z-index: 10000; overflow: hidden; min-width: 180px; max-height: 500px; overflow-y: auto; }
         .settings-menu button { width: 100%; padding: 12px 15px; border: none; background: none; text-align: left; cursor: pointer; font-size: 14px; }
         .settings-menu button:hover { background: #f0f0f0; }
-        .page-header { text-align: center; padding: 2rem 0; background: linear-gradient(135deg, #f5f0e8, #e8e0d5); border-radius: 24px; margin-bottom: 2rem; }
-        .diary-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem; }
-        .diary-item { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s; cursor: pointer; }
-        .diary-item:hover { transform: translateX(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-        .diary-date { color: #C5A065; font-size: 0.85rem; margin-bottom: 0.5rem; }
-        .diary-title { font-size: 1.3rem; font-weight: bold; color: #1A1A1A; margin-bottom: 0.5rem; }
-        .diary-summary { color: #4A4A4A; line-height: 1.6; margin-bottom: 1rem; }
-        .diary-link { color: #C5A065; text-decoration: none; font-size: 0.85rem; font-weight: 500; }
-        .diary-link:hover { text-decoration: underline; }
+        .diary-entry { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .diary-date { color: #8B4513; font-weight: bold; margin-bottom: 0.5rem; }
+        .diary-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; }
+        .diary-content { color: #555; line-height: 1.6; }
+        .diary-tags { margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .tag { background: #f0f0f0; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: #666; }
         .footer-stats { margin-top: 1rem; font-size: 12px; opacity: 0.7; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
         .wechat-contact { margin-top: 0.5rem; font-size: 12px; opacity: 0.7; }
-        .add-diary-btn { background: rgba(245,240,230,0.5); border: 2px dashed #D4AF37; border-radius: 16px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .add-diary-btn { background: rgba(245,240,230,0.5); border: 2px dashed #D4AF37; border-radius: 16px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; margin-top: 1rem; }
         .add-diary-btn:hover { background: rgba(245,240,230,0.8); }
         .add-diary-btn h3 { color: #8B4513; margin-bottom: 0.5rem; }
         .vip-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 20001; display: flex; align-items: center; justify-content: center; }
@@ -74,35 +71,40 @@
     <div class="container">
         <header class="page-header">
             <div class="container">
-                <h1>流水与回响</h1>
-                <p>在这个倍速播放的时代，我选择按下暂停键。</p>
+                <h1>我的日记</h1>
+                <p>记录工作心得、项目进展和职业思考</p>
             </div>
         </header>
 
-        <main class="container page-content">
-            <div class="diary-list" id="diaryList">
-                <div class="diary-item" data-id="1">
-                    <div class="diary-date">2026-04-16</div>
-                    <div class="diary-title">关于自由的代价</div>
-                    <div class="diary-summary">很多人羡慕自由职业，觉得可以睡到自然醒。但只有经历过的人才知道，自由是需要极度自律来支撑的。今天拒绝了两个不合适的客户，虽然少赚了点，但心里很踏实。</div>
-                    <a href="#" class="diary-link" onclick="viewDiary(1); return false;">阅读全文 →</a>
+        <main class="container page-content" id="diaryContainer">
+            <div class="diary-entry">
+                <div class="diary-date"><i class="far fa-calendar"></i> 2026年4月5日</div>
+                <div class="diary-title">网站项目完成与反思</div>
+                <div class="diary-content">
+                    <p>今天完成了个人网站的建设工作，包括首页、关于我、我的日常、我的相册、我的工作和工作日记六个页面。</p>
+                    <p><strong>收获：</strong>掌握了响应式网页设计的基本原理，实践了JavaScript与HTML/CSS的交互。</p>
                 </div>
-                <div class="diary-item" data-id="2">
-                    <div class="diary-date">2026-04-10</div>
-                    <div class="diary-title">雨夜读诗</div>
-                    <div class="diary-summary">窗外下着暴雨，屋里放着爵士乐。突然读懂了那句"也无风雨也无晴"。生活里的很多焦虑，其实都是自找的。</div>
-                    <a href="#" class="diary-link" onclick="viewDiary(2); return false;">阅读全文 →</a>
+                <div class="diary-tags"><span class="tag">项目进展</span><span class="tag">学习心得</span></div>
+            </div>
+            <div class="diary-entry">
+                <div class="diary-date"><i class="far fa-calendar"></i> 2026年4月4日</div>
+                <div class="diary-title">团队协作优化会议</div>
+                <div class="diary-content">
+                    <p>主持了团队协作流程优化会议，讨论了当前工作流程中的瓶颈和改进方案。</p>
                 </div>
-                <div class="diary-item" data-id="3">
-                    <div class="diary-date">2026-04-01</div>
-                    <div class="diary-title">四月，你好</div>
-                    <div class="diary-summary">新的一个月开始了。立个Flag：这个月要读完两本书，并且要把那个拖延了很久的播客节目上线。</div>
-                    <a href="#" class="diary-link" onclick="viewDiary(3); return false;">阅读全文 →</a>
+                <div class="diary-tags"><span class="tag">团队管理</span><span class="tag">流程优化</span></div>
+            </div>
+            <div class="diary-entry">
+                <div class="diary-date"><i class="far fa-calendar"></i> 2026年4月3日</div>
+                <div class="diary-title">技术难题解决记录</div>
+                <div class="diary-content">
+                    <p>遇到了系统集成时的数据同步延迟问题，通过优化数据库连接池解决。</p>
                 </div>
-                <div class="add-diary-btn" id="addDiaryBtn">
-                    <h3>➕ 新增日记</h3>
-                    <p style="color: #999; font-size: 12px;">点击记录新的心情与思考</p>
-                </div>
+                <div class="diary-tags"><span class="tag">问题解决</span><span class="tag">技术优化</span></div>
+            </div>
+            <div class="add-diary-btn" id="addDiaryBtn">
+                <h3>➕ 新增日记</h3>
+                <p style="color: #999; font-size: 12px;">点击记录新的工作心得</p>
             </div>
         </main>
     </div>
@@ -116,91 +118,13 @@
                 <span>📅 今日访问：<span id="todayPV">0</span> 次</span>
             </div>
             <div class="wechat-contact">📱 联系我：微信 y17580761</div>
-            <div class="footer-social">
-                <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-            </div>
+            <div class="footer-social"><a href="#" class="social-link"><i class="fab fa-weixin"></i></a><a href="#" class="social-link"><i class="fab fa-weibo"></i></a><a href="#" class="social-link"><i class="fab fa-github"></i></a><a href="#" class="social-link"><i class="fab fa-linkedin"></i></a></div>
         </div>
     </footer>
 
     <script src="js/script.js"></script>
     <script src="js/universal-settings.js"></script>
     <script>
-        // 日记数据存储
-        let diaries = [
-            { id: 1, date: '2026-04-16', title: '关于自由的代价', content: '很多人羡慕自由职业，觉得可以睡到自然醒。但只有经历过的人才知道，自由是需要极度自律来支撑的。今天拒绝了两个不合适的客户，虽然少赚了点，但心里很踏实。' },
-            { id: 2, date: '2026-04-10', title: '雨夜读诗', content: '窗外下着暴雨，屋里放着爵士乐。突然读懂了那句"也无风雨也无晴"。生活里的很多焦虑，其实都是自找的。' },
-            { id: 3, date: '2026-04-01', title: '四月，你好', content: '新的一个月开始了。立个Flag：这个月要读完两本书，并且要把那个拖延了很久的播客节目上线。' }
-        ];
-        
-        function saveDiaries() {
-            localStorage.setItem('myDiaries', JSON.stringify(diaries));
-        }
-        
-        function loadDiaries() {
-            const saved = localStorage.getItem('myDiaries');
-            if (saved) {
-                diaries = JSON.parse(saved);
-            }
-            renderDiaryList();
-        }
-        
-        function renderDiaryList() {
-            const container = document.getElementById('diaryList');
-            const addBtn = document.getElementById('addDiaryBtn');
-            if (!container) return;
-            
-            const diaryItems = diaries.sort((a, b) => new Date(b.date) - new Date(a.date));
-            container.innerHTML = '';
-            diaryItems.forEach(diary => {
-                const summary = diary.content.length > 80 ? diary.content.substring(0, 80) + '...' : diary.content;
-                const div = document.createElement('div');
-                div.className = 'diary-item';
-                div.setAttribute('data-id', diary.id);
-                div.innerHTML = `
-                    <div class="diary-date">${diary.date}</div>
-                    <div class="diary-title">${escapeHtml(diary.title)}</div>
-                    <div class="diary-summary">${escapeHtml(summary)}</div>
-                    <a href="#" class="diary-link" onclick="viewDiary(${diary.id}); return false;">阅读全文 →</a>
-                `;
-                container.appendChild(div);
-            });
-            container.appendChild(addBtn);
-        }
-        
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-        
-        function viewDiary(id) {
-            const diary = diaries.find(d => d.id === id);
-            if (diary) {
-                alert(`📖 ${diary.title}\n\n日期：${diary.date}\n\n${diary.content}`);
-            }
-        }
-        
-        function addNewDiary() {
-            const date = prompt('请输入日期（格式：2026-04-16）：', new Date().toISOString().slice(0,10));
-            if (!date) return;
-            const title = prompt('请输入标题：');
-            if (!title) return;
-            const content = prompt('请输入日记内容：');
-            if (!content) return;
-            const newId = Date.now();
-            diaries.push({ id: newId, date, title, content });
-            saveDiaries();
-            renderDiaryList();
-            alert('✅ 日记已添加！');
-        }
-        
         function updateStats() {
             const today = new Date().toDateString();
             let totalPV = localStorage.getItem('totalPV') || 0;
@@ -216,7 +140,28 @@
         }
         updateStats();
         
-        document.getElementById('addDiaryBtn').onclick = addNewDiary;
+        // 新增日记功能
+        document.getElementById('addDiaryBtn').onclick = () => {
+            const date = prompt('请输入日期（格式：2026年4月X日）：', '2026年4月16日');
+            if (!date) return;
+            const title = prompt('请输入标题：');
+            if (!title) return;
+            const content = prompt('请输入日记内容：');
+            if (!content) return;
+            
+            const container = document.getElementById('diaryContainer');
+            const addBtn = document.getElementById('addDiaryBtn');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'diary-entry';
+            newEntry.innerHTML = `
+                <div class="diary-date"><i class="far fa-calendar"></i> ${date}</div>
+                <div class="diary-title">${title}</div>
+                <div class="diary-content"><p>${content.replace(/\n/g, '<br>')}</p></div>
+                <div class="diary-tags"><span class="tag">个人记录</span></div>
+            `;
+            container.insertBefore(newEntry, addBtn);
+            alert('✅ 日记已添加！');
+        };
         
         document.getElementById('vipBtn').onclick = () => {
             const modal = document.createElement('div');
@@ -276,8 +221,6 @@
                 };
             }
         })();
-        
-        loadDiaries();
     </script>
 </body>
 </html>
