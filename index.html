@@ -168,37 +168,33 @@
         }
         updateStats();
         
-    // 欢迎弹窗（每次访问都弹出）
+    // 欢迎弹窗 - 手机端自适应 + 5秒自动关闭
 setTimeout(() => {
     const modal = document.createElement('div');
     modal.className = 'welcome-modal';
     modal.innerHTML = `
-        <div class="welcome-content">
-            <span class="welcome-close">&times;</span>
-            <div class="welcome-title" style="font-size: 32px; font-weight: 900; margin-bottom: 8px; letter-spacing: 4px; font-style: italic; background: linear-gradient(135deg, #1a1a1a, #333333, #1a1a1a); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; text-shadow: 0 0 3px rgba(0,0,0,0.3);">欢  迎  您</div>
+        <div class="welcome-content" style="max-width: 85%; padding: 20px;">
+            <div class="welcome-title" style="font-size: 24px;">欢 迎 您</div>
             <div class="welcome-subtitle">这一方天地，由您定义</div>
-            <div class="welcome-quote">在这里，<span style="font-size: 26px; font-style: italic; color: #C5A065; font-weight: 500;">30s</span> 把生活过成诗，把瞬间变成永恒。</div>
-            <ul class="welcome-features">
-                <li><strong>🖼️ 珍藏光影</strong><br><span>无论是高清大片还是生活碎片，这里都是您专属的云端画廊。</span></li>
-                <li><strong>📝 书写回响</strong><br><span>拒绝流水账，记录每一个灵光乍现的瞬间，让文字有温度。</span></li>
-                <li><strong>🎨 定制格调</strong><br><span>30秒变成自己的专属网站--纯前端编辑（纯文本、背景、头像、删减）拒绝千篇一律，您的网站由您全权定义。</span></li>
+            <div class="welcome-quote">30秒把生活过成诗</div>
+            <ul class="welcome-features" style="margin: 15px 0;">
+                <li><strong>🖼️ 珍藏光影</strong></li>
+                <li><strong>📝 书写回响</strong></li>
+                <li><strong>🎨 定制格调</strong></li>
             </ul>
-            <div class="welcome-price">
-                <div class="vip-badge">👑 解锁全部创作自由</div>
-                <div class="price-row">
-                    <span class="price-item"><span class="price-number">¥X.X</span><small></small></span>
-                    <span class="price-item"><span class="price-number"></span><small></small></span>
-                </div>
-                <div class="price-note">仅需一杯咖啡的钱，换取一整年的体面</div>
-            </div>
-            <button class="welcome-btn" id="welcomeBtn">🚀 立即开启我的领地</button>
-            <button class="welcome-skip" id="welcomeSkipBtn">还是先看看吧</button>
+            <button class="welcome-btn" id="welcomeBtn" style="padding: 8px;">开启我的领地</button>
         </div>
     `;
     document.body.appendChild(modal);
-    modal.querySelector('.welcome-close').onclick = () => modal.remove();
+    // 5秒后自动消失
+    setTimeout(() => {
+        if (modal && modal.remove) modal.remove();
+    }, 3000);
     modal.querySelector('#welcomeBtn').onclick = () => modal.remove();
-    modal.querySelector('#welcomeSkipBtn').onclick = () => modal.remove();
+    // 点击背景关闭
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.remove();
+    };
 }, 500);
 
         // VIP弹窗
